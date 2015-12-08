@@ -1,0 +1,154 @@
+# $Id: README,v 1.14 2007/11/30 08:57:39 Europe/Dublin $
+
+                          UniPrime (Prune) README
+
+o INSTALLATION
+o TUTORIAL
+o COMMAND REFERENCE
+o FAQ
+
+
+
+o INSTALLATION
+
+  See the INSTALL file.
+
+
+
+o TUTORIAL
+
+ Here is a simple example of a full execution of UniPrime. Each step can be
+ review with the web-companion interface.
+
+   1. added a new locus and use the human OAZ1 gene as prototype. The GeneID
+   (4946) is retrieved from GenBank:
+
+     >./uniprime.pl --action=locus --target=4946 -v
+
+     * OAZ1 (4946) added to the database, reference L3.1 :)
+
+   2. Use the locusID L3.1 (case sensitive) and look for orthologues within
+   the class Mammalia:
+
+     >./uniprime.pl --action=ortho --target=L3.1 --query=Mammalia[ORGN] -v
+
+     Seach for orthologues
+     Remote blast of OAZ1
+     > AccessionId: NC_008803 (0)
+     > AccessionId: NC_005106 (3.66925e-135)
+     > AccessionId: NC_007876 (0)
+     > AccessionId: NC_000076 (0)
+     > AccessionId: NC_006486 (0)
+     > AccessionId: NC_007305 (0)
+     > AccessionId: NC_006602 (0)
+     Done.
+
+   3. Use the locusID L3.1 and establish an alignment and a consensus
+   sequence with a threshold of 60%:
+
+     >./uniprime.pl --action=align --target=L3.1 -c=60 -v
+
+     Establish alignment
+      > Homo sapiens (OAZ1)
+      > Monodelphis domestica (LOC100014315)
+      > Rattus norvegicus (Oaz1)
+      > Macaca mulatta (LOC721477)
+      > Mus musculus (Oaz1)
+      > Pan troglodytes (LOC455569)
+      > Bos taurus (LOC506973)
+      > Canis lupus familiaris (LOC476749)
+     Done.
+
+   4. Use the locusID L3.1 and design the primer set:
+
+     >./uniprime.pl --action=primer --target=L3.1 -v
+
+     Local Primer3
+      > OAZ1 (alignment A3.1) in progress
+      > Check Homo sapiens sequence
+      > Check Monodelphis domestica sequence
+      > Check Rattus norvegicus sequence
+      > Check Macaca mulatta sequence
+      > Check Mus musculus sequence
+      > Check Pan troglodytes sequence
+      > Check Bos taurus sequence
+      > Check Canis lupus familiaris sequence
+     Done.
+
+   5. Optionally, use the primer set X3.2 and do a virtual PCR with the
+   Mammalian sequence of the WGS databank of the NCBI.
+
+     >./uniprime.pl --action=vpcr --target=X3.2 --db=wgs --query=Mammalia[ORGN] -v
+
+     Execute a virtual-PCR for primer set X3.2
+     > Remote blast for Homo sapiens
+     > Remote blast for Monodelphis domestica
+     > Remote blast for Rattus norvegicus
+     > Remote blast for Macaca mulatta
+     > Remote blast for  Mus musculus
+     > Remote blast for Pan troglodytes
+     > Remote blast for Canis lupus familiaris
+     Done.
+
+
+
+o COMMAND REFERENCE
+
+ There is only one file controlling UniPrime in bin/uniprime.pl.
+ You may find more help by using the command-line help of this file.
+
+     >./uniprime.pl --help
+
+ There are five main functions: adding a new locus/gene; searching
+ for the orthologous sequences in other species; establishing the
+ alignment; designing the primer set and doing a virtual PCR if
+ necessary:
+
+     uniprime.pl --action=<action> --target==<ID> [options]
+
+  Available actions are:
+   'locus'   Add a new locus:
+    --target GenBank GeneID to be used for this action. (requested*)
+    --pmid   Associate a reference. (PMID)
+
+   'ortho'   Find new orthologues from mRNA sequences of the locus prototype
+             with BLASTN with the following options:
+    --target LocusID to be used for this action. (requested*)
+    --db     Database used when performing the tblastx search. (default
+             value 'refseq_rna')
+    --query  the BLAST search can be limited to the result of an Entrez query
+             against the database chosen. (default none; e.g. 'viruses[ORGN]')
+    --dna    Use DNA rather than mRNA as initial input sequence. (default mRNA)
+    -e       Set the E-value threshold. It is a positive real number. The
+             default is 1e-100. Hit with E-value better than (less than)
+             this threshold will be shown.
+
+   'align'   Provide alignment using T-coffee:
+    --target LocusID to be used for this action. (requested*)
+    --dna    Use DNA rather than mRNA as initial input sequence. (default mRNA)
+    -c       Set the threshold to establish the consensus sequence. It is a
+             positive number between 0 and 100. (default 70)
+    --select Specify the sub-set of sequence used for the alignement. (e.g.
+             --select=S3.1 --select=S3.2 --select=S3.4 specify 3 sequences
+             only S3.1, S3.2 and S3.4)
+
+   'primer'  Identify universal primers from consensus sequence:
+    --target LocusID to be used for this action. (requested*)
+    --size   Optimal size of the amplification. (default 600)
+
+   'vPCR'    Virtual-PCR retrieving all amplicons:
+    --target 'PrimerID to be used for this action. (requested*)
+    --db     Database used when performing the tblastx search. (default
+             value 'wgs')
+    --query  the BLAST search can be limited to the result of an Entrez query
+             against the database chosen. (default 'viruses[ORGN]')
+
+    -v       Print verbose output.
+
+
+
+o FAQ
+
+ Q: Why is this version of UniPrime is called 'Prune' ?
+ A: "Prune juice. A warrior's drink!" - Worf
+
