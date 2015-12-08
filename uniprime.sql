@@ -1,12 +1,14 @@
--- uniprime.v1.18.prune
+-- uniprime.v2.10 (Ootoowerg)
 --
--- Copyright 2006-2008 M.Bekaert
+-- Copyright 2006-2012 M.Bekaert
+--   Modified by Robin Boutros (2009) [1.60 (blackberry)]
 --
 -- PostgreSQL database: uniprime
 -- --------------------------------------------------------
+--
 
 --
--- Name: alignment; Type: TABLE; Tablespace: 
+-- Name: alignment; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE alignment (
@@ -17,7 +19,7 @@ CREATE TABLE alignment (
     sequences text NOT NULL,
     alignment text NOT NULL,
     consensus text NOT NULL,
-    score integer,    
+    score integer,
     structure text,
     program character varying(64) NOT NULL,
     comments text,
@@ -27,24 +29,89 @@ CREATE TABLE alignment (
 
 
 --
--- Name: evidence; Type: TABLE; Tablespace: 
+-- Name: banks; Type: TABLE; Tablespace:
+--
+
+CREATE TABLE banks (
+    id character varying(16) NOT NULL,
+    bank character varying(128) NOT NULL,
+    bydefault boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: evidence; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE evidence (
     id character varying(8) NOT NULL,
     evidence character varying(128) NOT NULL,
     description text,
-    lang character varying(8) NOT NULL DEFAULT 'en'
+    lang character varying(8) DEFAULT 'en'::character varying NOT NULL
 );
 
 
 --
--- Name: locus; Type: TABLE; Tablespace: 
+-- Name: execstatus; Type: TABLE; Tablespace:
+--
+
+CREATE TABLE execstatus (
+    id serial NOT NULL,
+    genid integer NOT NULL,
+    file text DEFAULT NULL,
+    locus_prefix integer DEFAULT -1 NOT NULL,
+    locus_id integer DEFAULT -1 NOT NULL,
+    email character varying(128) NOT NULL,
+    step integer NOT NULL,
+    status integer NOT NULL,
+    description text NOT NULL
+);
+
+
+--
+-- Name: execstatus_id_seq; Type: SEQUENCE SET
+--
+
+SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('execstatus', 'id'), 1, false);
+
+
+--
+-- Name: execution; Type: TABLE; Tablespace:
+--
+
+CREATE TABLE execution (
+    id serial NOT NULL,
+    step integer NOT NULL,
+    params text NOT NULL,
+    email character varying(128) NOT NULL,
+    genid integer NOT NULL,
+    name character varying(128) DEFAULT NULL::character varying,
+    file text DEFAULT NULL,
+    locus_prefix integer DEFAULT -1 NOT NULL,
+    locus_id integer DEFAULT -1 NOT NULL,
+    md5_id text NOT NULL,
+    exec integer DEFAULT 0 NOT NULL,
+    date timestamp without time zone DEFAULT now() NOT NULL,
+    len integer DEFAULT -1 NOT NULL,
+    exitvalue integer DEFAULT -1 NOT NULL
+);
+
+
+--
+-- Name: execution_id_seq; Type: SEQUENCE SET
+--
+
+SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('execution', 'id'), 1, false);
+
+
+--
+-- Name: locus; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE locus (
     prefix integer NOT NULL,
     id integer NOT NULL,
+    genid integer NOT NULL,
     name character varying(128) NOT NULL,
     alias character varying(128),
     locus_type integer DEFAULT 0 NOT NULL,
@@ -61,19 +128,39 @@ CREATE TABLE locus (
 
 
 --
--- Name: locus_type; Type: TABLE; Tablespace: 
+-- Name: locus_type; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE locus_type (
     id integer NOT NULL,
     locus_type character varying(128) NOT NULL,
     description text,
-    lang character varying(8) NOT NULL DEFAULT 'en'
+    lang character varying(8) DEFAULT 'en'::character varying NOT NULL
 );
 
 
 --
--- Name: molecule; Type: TABLE; Tablespace: 
+-- Name: member; Type: TABLE; Tablespace:
+--
+
+CREATE TABLE member (
+    id serial NOT NULL,
+    "login" character varying(32) NOT NULL,
+    pass_md5 character varying(32) NOT NULL,
+    email character varying(128) NOT NULL,
+    ip character varying(24)  NOT NULL
+);
+
+
+--
+-- Name: member_id_seq; Type: SEQUENCE SET
+--
+
+SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('member', 'id'), 1, false);
+
+
+--
+-- Name: molecule; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE molecule (
@@ -83,7 +170,7 @@ CREATE TABLE molecule (
 
 
 --
--- Name: mrna; Type: TABLE; Tablespace: 
+-- Name: mrna; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE mrna (
@@ -103,7 +190,7 @@ CREATE TABLE mrna (
 
 
 --
--- Name: primer; Type: TABLE; Tablespace: 
+-- Name: primer; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE primer (
@@ -129,7 +216,7 @@ CREATE TABLE primer (
 
 
 --
--- Name: sequence; Type: TABLE; Tablespace: 
+-- Name: sequence; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE "sequence" (
@@ -170,31 +257,66 @@ CREATE TABLE "sequence" (
 
 
 --
--- Name: sequence_type; Type: TABLE; Tablespace: 
+-- Name: sequence_type; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE sequence_type (
     id integer NOT NULL,
     sequence_type character varying(128) NOT NULL,
     description text,
-    lang character varying(8) NOT NULL DEFAULT 'en'
+    lang character varying(8) DEFAULT 'en'::character varying NOT NULL
 );
 
 
 --
--- Name: status; Type: TABLE; Tablespace: 
+-- Name: status; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE status (
     id integer NOT NULL,
     status character varying(128) NOT NULL,
     description text,
-    lang character varying(8) NOT NULL DEFAULT 'en'
+    lang character varying(8) DEFAULT 'en'::character varying NOT NULL
 );
 
 
 --
--- Name: translation; Type: TABLE; Tablespace: 
+-- Name: stepparams; Type: TABLE; Tablespace:
+--
+
+CREATE TABLE stepparams (
+    id serial NOT NULL,
+    step integer NOT NULL,
+    email text NOT NULL,
+    genid integer NOT NULL,
+    locus_prefix integer DEFAULT -1 NOT NULL,
+    locus_id integer DEFAULT -1 NOT NULL,
+    md5_id text NOT NULL,
+    db text,
+    query text,
+    dna text,
+    alignprog text,
+    threshold text,
+    alignment text,
+    consensus integer,
+    sequences text,
+    size integer,
+    dbpcr text,
+    querypcr text,
+    primer text,
+    organisms text DEFAULT ''::text NOT NULL
+);
+
+
+--
+-- Name: stepparams_id_seq; Type: SEQUENCE SET
+--
+
+SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('stepparams', 'id'), 1, false);
+
+
+--
+-- Name: translation; Type: TABLE; Tablespace:
 --
 
 CREATE TABLE translation (
@@ -204,26 +326,38 @@ CREATE TABLE translation (
 
 
 --
--- Data for Name: evidence; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: banks; Type: TABLE DATA
+--
+
+INSERT INTO banks VALUES ('nr', 'Nucleotide collection', false);
+INSERT INTO banks VALUES ('refseq_rna', 'Reference mRNA sequences', true);
+INSERT INTO banks VALUES ('refseq_genomic', 'Reference genomic sequences', false);
+INSERT INTO banks VALUES ('chromosome', 'NCBI genomes', false);
+INSERT INTO banks VALUES ('est', 'Expressed sequence tags', false);
+INSERT INTO banks VALUES ('est_others', 'Non-human, non-mouse ESTs', false);
+INSERT INTO banks VALUES ('gss', 'Genomic survey sequences', false);
+INSERT INTO banks VALUES ('HTGS', 'High throughput genomic sequences', false);
+INSERT INTO banks VALUES ('pat', 'Patent sequences', false);
+INSERT INTO banks VALUES ('pdb', 'Protein data bank', false);
+INSERT INTO banks VALUES ('alu_repeats', 'Human ALU repeat elements', false);
+INSERT INTO banks VALUES ('dbsts', 'Sequence tagged sites', false);
+INSERT INTO banks VALUES ('wgs', 'Whole-genome shotgun reads', false);
+INSERT INTO banks VALUES ('env_nt', 'Environmental samples', false);
+
+
+--
+-- Data for Name: evidence; Type: TABLE DATA
 --
 
 INSERT INTO evidence VALUES ('NR', 'Unknown', NULL, 'en');
-INSERT INTO evidence VALUES ('TAS', 'Traceable Author Statement', NULL, 'en');
-INSERT INTO evidence VALUES ('NAS', 'Non-traceable Author Statement', NULL, 'en');
-INSERT INTO evidence VALUES ('IC', 'Inferred by Curator', NULL, 'en');
-INSERT INTO evidence VALUES ('IDA', 'Inferred from Direct Assay', NULL, 'en');
-INSERT INTO evidence VALUES ('IEA', 'Inferred from Electronic Annotation', NULL, 'en');
-INSERT INTO evidence VALUES ('IEP', 'Inferred from Expression Pattern', NULL, 'en');
-INSERT INTO evidence VALUES ('IGI', 'Inferred from Genetic Interaction', NULL, 'en');
-INSERT INTO evidence VALUES ('IMP', 'Inferred from Mutant Phenotype', NULL, 'en');
-INSERT INTO evidence VALUES ('IPI', 'Inferred from Physical Interaction', NULL, 'en');
-INSERT INTO evidence VALUES ('ISS', 'Inferred from Sequence or Structural Similarity', NULL, 'en');
-INSERT INTO evidence VALUES ('RCA', 'Inferred from Reviewed Computational Analysis', NULL, 'en');
+INSERT INTO evidence VALUES ('DIR', 'Direct GeneID submission', NULL, 'en');
+INSERT INTO evidence VALUES ('SEQ', 'User-design fasta entry', NULL, 'en');
+INSERT INTO evidence VALUES ('EXO', 'Exon catcher', NULL, 'en');
 INSERT INTO evidence VALUES ('ND', 'No biological Data available', NULL, 'en');
 
 
 --
--- Data for Name: locus_type; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: locus_type; Type: TABLE DATA
 --
 
 INSERT INTO locus_type VALUES (0, 'Unknown', NULL, 'en');
@@ -240,7 +374,7 @@ INSERT INTO locus_type VALUES (10, 'Other', 'Not classified entry', 'en');
 
 
 --
--- Data for Name: molecule; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: molecule; Type: TABLE DATA
 --
 
 INSERT INTO molecule VALUES ('DNA', 'DNA');
@@ -264,7 +398,7 @@ INSERT INTO molecule VALUES ('ms-NA', 'ms-NA (mixed-stranded)');
 
 
 --
--- Data for Name: sequence_type; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: sequence_type; Type: TABLE DATA
 --
 
 INSERT INTO sequence_type VALUES (0, 'Unknown', NULL, 'en');
@@ -275,15 +409,15 @@ INSERT INTO sequence_type VALUES (4, 'Generated', NULL, 'en');
 
 
 --
--- Data for Name: status; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: status; Type: TABLE DATA
 --
 
 INSERT INTO status VALUES (0, 'Unknown', 'The Recode record is not evaluated', 'en');
-INSERT INTO status VALUES (1, 'Preliminary', NULL, 'en');
-INSERT INTO status VALUES (2, 'Orthologs found', NULL, 'en');
+INSERT INTO status VALUES (1, 'Locus retrieval', NULL, 'en');
+INSERT INTO status VALUES (2, 'Orthologs search', NULL, 'en');
 INSERT INTO status VALUES (3, 'Multi-alignment', NULL, 'en');
-INSERT INTO status VALUES (4, 'Primers available', NULL, 'en');
-INSERT INTO status VALUES (5, 'Primers ordered', NULL, 'en');
+INSERT INTO status VALUES (4, 'Primer design', NULL, 'en');
+INSERT INTO status VALUES (5, 'Virtual PCR', NULL, 'en');
 INSERT INTO status VALUES (6, 'Amplification in progress', NULL, 'en');
 INSERT INTO status VALUES (7, 'Validated', NULL, 'en');
 INSERT INTO status VALUES (8, 'Pending', NULL, 'en');
@@ -294,7 +428,7 @@ INSERT INTO status VALUES (12, 'Not selected', NULL, 'en');
 
 
 --
--- Data for Name: translation; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: translation; Type: TABLE DATA
 --
 
 INSERT INTO translation VALUES (0, 'Unknown');
@@ -316,7 +450,7 @@ INSERT INTO translation VALUES (21, 'Trematode Mitochondrial');
 
 
 --
--- Name: alignment_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: alignment_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY alignment
@@ -324,7 +458,15 @@ ALTER TABLE ONLY alignment
 
 
 --
--- Name: evidence_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: banks_pkey; Type: CONSTRAINT; Tablespace:
+--
+
+ALTER TABLE ONLY banks
+    ADD CONSTRAINT banks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: evidence_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY evidence
@@ -332,7 +474,23 @@ ALTER TABLE ONLY evidence
 
 
 --
--- Name: locus_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: execstatus_pkey; Type: CONSTRAINT; Tablespace:
+--
+
+ALTER TABLE ONLY execstatus
+    ADD CONSTRAINT execstatus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: execution_pkey; Type: CONSTRAINT; Tablespace:
+--
+
+ALTER TABLE ONLY execution
+    ADD CONSTRAINT execution_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: locus_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY locus
@@ -340,7 +498,7 @@ ALTER TABLE ONLY locus
 
 
 --
--- Name: locus_type_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: locus_type_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY locus_type
@@ -348,15 +506,15 @@ ALTER TABLE ONLY locus_type
 
 
 --
--- Name: locus_unique; Type: CONSTRAINT; Tablespace: 
+-- Name: member_pkey; Type: CONSTRAINT; Tablespace:
 --
 
-ALTER TABLE ONLY locus
-    ADD CONSTRAINT locus_unique UNIQUE (name);
+ALTER TABLE ONLY member
+    ADD CONSTRAINT member_pkey PRIMARY KEY (id);
 
 
 --
--- Name: molecule_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: molecule_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY molecule
@@ -364,7 +522,7 @@ ALTER TABLE ONLY molecule
 
 
 --
--- Name: molecule_unique; Type: CONSTRAINT; Tablespace: 
+-- Name: molecule_unique; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY molecule
@@ -372,7 +530,7 @@ ALTER TABLE ONLY molecule
 
 
 --
--- Name: mrna_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: mrna_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY mrna
@@ -380,7 +538,7 @@ ALTER TABLE ONLY mrna
 
 
 --
--- Name: primer_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: primer_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY primer
@@ -388,7 +546,7 @@ ALTER TABLE ONLY primer
 
 
 --
--- Name: sequence_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: sequence_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY "sequence"
@@ -396,7 +554,7 @@ ALTER TABLE ONLY "sequence"
 
 
 --
--- Name: sequence_type_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: sequence_type_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY sequence_type
@@ -404,7 +562,7 @@ ALTER TABLE ONLY sequence_type
 
 
 --
--- Name: status_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: status_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY status
@@ -412,7 +570,15 @@ ALTER TABLE ONLY status
 
 
 --
--- Name: translation_pkey; Type: CONSTRAINT; Tablespace: 
+-- Name: stepparams_pkey; Type: CONSTRAINT; Tablespace:
+--
+
+ALTER TABLE ONLY stepparams
+    ADD CONSTRAINT stepparams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: translation_pkey; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY translation
@@ -420,7 +586,7 @@ ALTER TABLE ONLY translation
 
 
 --
--- Name: translation_unique; Type: CONSTRAINT; Tablespace: 
+-- Name: translation_unique; Type: CONSTRAINT; Tablespace:
 --
 
 ALTER TABLE ONLY translation
@@ -428,101 +594,102 @@ ALTER TABLE ONLY translation
 
 
 --
--- Name: alignment_locus; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: alignment_locus; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY alignment
-    ADD CONSTRAINT alignment_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id);
+    ADD CONSTRAINT alignment_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: locus_evidence; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY locus
-    ADD CONSTRAINT locus_evidence FOREIGN KEY (evidence) REFERENCES evidence(id);
-
-
---
--- Name: locus_locus_type; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: locus_evidence; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY locus
-    ADD CONSTRAINT locus_locus_type FOREIGN KEY (locus_type) REFERENCES locus_type(id);
+    ADD CONSTRAINT locus_evidence FOREIGN KEY (evidence) REFERENCES evidence(id) ON DELETE CASCADE;
 
 
 --
--- Name: locus_status; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: locus_locus_type; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY locus
-    ADD CONSTRAINT locus_status FOREIGN KEY (status) REFERENCES status(id);
+    ADD CONSTRAINT locus_locus_type FOREIGN KEY (locus_type) REFERENCES locus_type(id) ON DELETE CASCADE;
 
 
 --
--- Name: mrna_locus; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: locus_status; Type: FK CONSTRAINT
+--
+
+ALTER TABLE ONLY locus
+    ADD CONSTRAINT locus_status FOREIGN KEY (status) REFERENCES status(id) ON DELETE CASCADE;
+
+
+--
+-- Name: mrna_locus; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY mrna
-    ADD CONSTRAINT mrna_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id);
+    ADD CONSTRAINT mrna_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: mrna_sequence; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: mrna_sequence; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY mrna
-    ADD CONSTRAINT mrna_sequence FOREIGN KEY (sequence_prefix, sequence_id) REFERENCES "sequence"(prefix, id);
+    ADD CONSTRAINT mrna_sequence FOREIGN KEY (sequence_prefix, sequence_id) REFERENCES "sequence"(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: primer_alignment; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY primer
-    ADD CONSTRAINT primer_alignment FOREIGN KEY (alignment_prefix, alignment_id) REFERENCES alignment(prefix, id);
-
-
---
--- Name: primer_locus; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: primer_alignment; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY primer
-    ADD CONSTRAINT primer_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id);
+    ADD CONSTRAINT primer_alignment FOREIGN KEY (alignment_prefix, alignment_id) REFERENCES alignment(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: sequence_locus; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: primer_locus; Type: FK CONSTRAINT
 --
 
-ALTER TABLE ONLY "sequence"
-    ADD CONSTRAINT sequence_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id);
-
-
---
--- Name: sequence_molecule; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "sequence"
-    ADD CONSTRAINT sequence_molecule FOREIGN KEY (molecule) REFERENCES molecule(id);
+ALTER TABLE ONLY primer
+    ADD CONSTRAINT primer_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: sequence_sequence_type; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: sequence_locus; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY "sequence"
-    ADD CONSTRAINT sequence_sequence_type FOREIGN KEY (sequence_type) REFERENCES sequence_type(id);
+    ADD CONSTRAINT sequence_locus FOREIGN KEY (locus_prefix, locus_id) REFERENCES locus(prefix, id) ON DELETE CASCADE;
 
 
 --
--- Name: sequence_translation; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: sequence_molecule; Type: FK CONSTRAINT
 --
 
 ALTER TABLE ONLY "sequence"
-    ADD CONSTRAINT sequence_translation FOREIGN KEY (translation) REFERENCES translation(id);
+    ADD CONSTRAINT sequence_molecule FOREIGN KEY (molecule) REFERENCES molecule(id) ON DELETE CASCADE;
+
+
+--
+-- Name: sequence_sequence_type; Type: FK CONSTRAINT
+--
+
+ALTER TABLE ONLY "sequence"
+    ADD CONSTRAINT sequence_sequence_type FOREIGN KEY (sequence_type) REFERENCES sequence_type(id) ON DELETE CASCADE;
+
+
+--
+-- Name: sequence_translation; Type: FK CONSTRAINT
+--
+
+ALTER TABLE ONLY "sequence"
+    ADD CONSTRAINT sequence_translation FOREIGN KEY (translation) REFERENCES translation(id) ON DELETE CASCADE;
 
 
 --
 -- Done
 --
+

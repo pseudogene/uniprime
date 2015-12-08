@@ -53,9 +53,10 @@ function foot() {
       </div>
     </div>
     <p id="footer">
-    &copy; 2006-2008 M. Bekaert &amp; E. Teeling. <?php print _("This work is licensed under the"); ?> <a rel="license" href="http://creativecommons.org/licenses/LGPG/2.1/"><?php print _("GNU LGPL License 2.1"); ?></a>.
+    &copy; 2006-2008 M. Bekaert &amp; E. Teeling. <?php print _("This work is licensed under a"); ?> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><?php print _("Creative Commons License"); ?></a>.
     </p>
   </body>
+<!-- <rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><Work rdf:about=""><license rdf:resource="http://creativecommons.org/licenses/by-nc-sa/3.0/" /></Work><License rdf:about="http://creativecommons.org/licenses/by-nc-sa/3.0/"><permits rdf:resource="http://web.resource.org/cc/Reproduction"/><permits rdf:resource="http://web.resource.org/cc/Distribution"/><requires rdf:resource="http://web.resource.org/cc/Notice"/><requires rdf:resource="http://web.resource.org/cc/Attribution"/><prohibits rdf:resource="http://web.resource.org/cc/CommercialUse"/><permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/><requires rdf:resource="http://web.resource.org/cc/ShareAlike"/></License></rdf:RDF> -->
 </html>
 <?php
  }

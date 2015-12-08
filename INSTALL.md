@@ -3,17 +3,33 @@
 # Quick Installation (Ubuntu/Fedora)
 
 ## Disclamer
-UniPrime 1.18 has been updated to support all recent development of the external resources it requires. Here is a quick installation tutorial provided without any warranty. It is base on a standard installation of either [Ubuntu](http://www.ubuntu.com/) 12+ or [Fedora](https://fedoraproject.org/) 17+.
+UniPrime 2.10 has been updated to support all recent development of the external resources it requires. Here is a quick installation tutorial provided without any warranty. It is base on a standard installation of either [Ubuntu](http://www.ubuntu.com/) 12+ or [Fedora](https://fedoraproject.org/) 17+.
 
 ## Primer3
-You will need [Primer3](http://primer3.sourceforge.net/)
+You will need [Primer3](http://primer3.sourceforge.net/) 2.3+
 
 ```
 (ubuntu) apt-get install primer3
 (fedora) yum install primer3
 ```
 
-## T-Coffee
+## Aligners
+You will also need am aligner like [GramAlign](http://bioinfo.unl.edu/gramalign.php) or [T-Coffee](http://www.tcoffee.org/)
+
+### GramAlign
+ * Download [GramAlign2\_00.zip](http://bioinfo.unl.edu/downloads/GramAlign2_00.zip)
+ * Open a terminal window, move to the download path:
+
+```
+     unzip GramAlign2_00.zip
+     cd GramAlign2_00
+     cd src
+     make clean
+     make
+     sudo cp GramAlign /usr/local/bin
+```
+
+### T-Coffee
 
 Check T-Coffee [installation](http://www.tcoffee.org/Workshops/tcoffeetutorials/installation.html) page for extra details
 
@@ -41,9 +57,9 @@ or run the installation executable for ubuntu
 Download, then unpack the tar file. For example:
 
 ```
-     bunzip2 uniprime-1.18.tar.bz2
-     tar xvf uniprime-1.18.tar
-     cd uniprime-1.18
+     bunzip2 uniprime-2.10.tar.bz2
+     tar xvf uniprime-2.10.tar
+     cd uniprime-2.20
 ```
 
 Initialising the Database:

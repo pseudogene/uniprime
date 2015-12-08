@@ -1,4 +1,4 @@
-# $Id: INSTALL,v 1.18 2008/04/02 10:17:37 Europe/Dublin $
+# $Id: INSTALL,v 2.10 2012/09/07 12:35:58 Scotland/Stirling $
 
 o INSTALLATION
 o SYSTEM REQUIREMENTS
@@ -8,72 +8,65 @@ o INSTALLING UNIPRIME
 o INSTALLATION
 
  Universal Primer Design Tools (UniPrime) has been installed
- on many forms of Linux/Unix.
+ on many forms of Linux/Unix/MacOS.
 
 
 o SYSTEM REQUIREMENTS
 
  - Perl 5.005 or later.
 
- - Bioperl modules: UniPrime uses functionality provided
-  in Bioperl modules. (see http://www.bioperl.org/)
-   
  - Primer3 is mandatory since UniPrime is base on Primer3.
    (see http://primer3.sourceforge.net/)
-   
- - T-coffee is mandatory if you plan to use multi-alignment option.
-   (see http://www.ebi.ac.uk/tcoffeew/)
+
+ - T-coffee or GramAlign is mandatory if you plan to use multi-alignment
+   option.
+   (see http://www.tcoffee.org/ or http://bioinfo.unl.edu/gramalign.php)
+
+ - NCBI Blast+ is mandatory.
+   (see ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
 
  - PostgreSQL is mandatory since UniPrime store all the sequences,
    alignments and primers in a database.
    (see http://www.postgresql.org/)
 
- After installing Primer3 and T-coffee packages on your system,
- you may edit the environmental variable $PRIMER3DIR and $TCOFFEEDIR
- or your $PATH variable to point to the Primer3 and T-coffee
- directories respectively. Ensure that users have execute
- privileges for those programs. 
+ After installing the packages on your system, you may edit your $PATH
+ variable to point to the Primer3, T-coffee or GramAlign and Blastn
+ directories respectively. Ensure that users have execute privileges for
+ those programs.
 
 
 o INSTALLING UNIPRIME
 
    Download, then unpack the tar file. For example:
 
-     bunzip2 uniprime-1.18.tar.bz2
-     tar xvf uniprime-1.18.tar
-     cd uniprime-1.18
+     bunzip2 uniprime-2.10.tar.bz2
+     tar xvf uniprime-2.10.tar
+     cd uniprime-2.20
 
-   Now issue the make commands to install the Bioperl modules:
-
-     perl Makefile.PL
-     make            
-     sudo make install    
- 
-   To 'make install' you need write permission in the perl5/site_perl/ 
-   source area.
-
-   Initialising the Database:
+  Initialising the Database:
 
      createdb uniprime
      psql uniprime < uniprime.sql
 
    This process assumes that you are using a functional postgreSQL
    server/client and the current user is registered as an SQL user.
-   (see postgreSQL installation manual). 
+   (see postgreSQL installation manual).
 
 
 o INSTALLING THE WEB-COMPANION
- 
+
    Copy the web pages in your web server root (usually /var/www/html)
    and grant the access to the database to the web server user
-   (usually www or www-admin):
+   (usually www, www-admin or _www):
 
-     cp -r www/uniprime /your_web_server_path
-     chown -R web-server-user:web-server-group /your_web_server_path/uniprime
-     ./grant.sh web-server-user | psql uniprime
-   
-   then use your web browser to finalise the installation:
+     sudo cp -r www/uniprime /your_web_server_path
+     sudo chown -R www-admin:www-admin /your_web_server_path/uniprime
+     sudo ./grant.sh www-admin | psql uniprime
+
+   then use your web browser to finalise the installation (often it's 127.0.0.1):
 
      http://SERVER-ADDRESS/uniprime/install.php
 
 
+ The files you will need (uniprime.pm and UniTools.pm) are in directory 'bin'
+ of the distribution package.

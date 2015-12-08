@@ -1,64 +1,53 @@
-# $Id: README,v 2.10 2012/09/07 12:35:58 Scotland/Stirling $
+# Introduction to UniPrime 2.10
 
-                          UniPrime (Ootoowerg) README
+# UniPrime (Ootoowerg)
 
-o INSTALLATION
-o TUTORIAL
-o COMMAND REFERENCE
-o FAQ
+## TUTORIAL
 
+Here is a simple example of a full execution of UniPrime. Each step can be reviewed with the web-companion interface.
+The files you will need (`uniprime.pm` and `UniTools.pm`) are in directory `bin` of the distribution package.
 
+ *  Add a new locus and use the human OAZ1 gene as prototype. The GeneID (4946) is retrieved from GenBank (from the command line in a Terminal window):
 
-o INSTALLATION
-
-  See the INSTALL file.
-
-
-
-o TUTORIAL
-
- Here is a simple example of a full execution of UniPrime. Each step can be
- reviewed with the web-companion interface.
- The files you will need uniprime.pm and UniTools.pm are in directory 'bin'
- of the distribution package.
-
-   1. Add a new locus and use the human OAZ1 gene as prototype. The GeneID
-   (4946) is retrieved from GenBank (from the command line in a Terminal
-   window):
-
+```
      ./uniprime.pl --action=locus --target=4946 -v
+```
 
-   2. Use the locusID provided (e.g. L3.1) and look for orthologues within
-   the class Mammalia and an e-value of 2e-50 as threshold:
+ *  Use the locusID provided (_e.g._ L3.1) and look for orthologues within the class Mammalia and an e-value of 2e-50 as threshold:
 
+```
      ./uniprime.pl --action=ortho --target=L3.1 -e=2e-50 --query=Mammalia[ORGN] -v
+```
 
-   3. Use the locusID (e.g. L3.1) and establish an alignment and a consensus
-   sequence with a threshold of 60%:
+ *  Use the locusID (_e.g._ L3.1) and establish an alignment and a consensus sequence with a threshold of 60%:
 
+```
      ./uniprime.pl --action=align --target=L3.1 -c=60 -v
+```
 
-   4. Use the AlignmentID (e.g. A3.2) and design the primer sets:
+ *  Use the AlignmentID (_e.g._ A3.2) and design the primer sets:
 
+```
      ./uniprime.pl --action=primer --target=A3.2 -v
+```
 
-   5. Optionally, use the primer set (e.g. X3.3) and do a virtual PCR with the
-   Mammalian sequence of the WGS databank of the NCBI.
+ *  Optionally, use the primer set (_e.g._ X3.3) and do a virtual PCR with the Mammalian sequence of the WGS databank of the NCBI.
 
+```
      ./uniprime.pl --action=vpcr --target=X3.3 --db=wgs --query=Mammalia[ORGN] -v
+```
 
-o COMMAND REFERENCE
+## COMMAND REFERENCE
 
- There is only one file controlling UniPrime in bin/uniprime.pl.
- You may find more help by using the command-line help of this file.
+There is only one file controlling UniPrime in `bin/uniprime.pl`. You may find more help by using the command-line help of this file.
 
+```
      ./uniprime.pl --help
+```
 
- There are five main functions: adding a new locus/gene; searching
- for the orthologous sequences in other species; establishing the
- alignment; designing the primer set and doing a virtual PCR if
- necessary:
+There are five main functions: adding a new locus/gene; searching for the orthologous sequences in other species; establishing the alignment; designing the primer set and doing a virtual PCR if necessary:
 
+```
      uniprime.pl --action=<action> --target=<ID> [options]
 
   Available actions are:
@@ -93,7 +82,7 @@ o COMMAND REFERENCE
     --size   Optimal size of the amplification. (default 600)
 
    'vPCR'    Virtual-PCR retrieving all amplicons:
-    --target 'PrimerID to be used for this action. (mandatory*)
+    --target PrimerID to be used for this action. (mandatory*)
     --db     Database used when performing the tblastx search. (default
              value 'wgs')
     --query  the BLAST search can be limited to the result of an Entrez query
@@ -102,10 +91,4 @@ o COMMAND REFERENCE
    Global options:
     --aligner either GramAlign or T-coffee. (Default GramAlign)
     -v       Print verbose output.
-
-
-
-o FAQ
-
- Q: Where can I found more help?
- A: UniPrime home page is now https://code.google.com/p/uniprime/
+```

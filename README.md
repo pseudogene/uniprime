@@ -1,6 +1,6 @@
-UniPrime v1.18 - A workflow-based platform for improved Universal Primer design
+UniPrime v2.10 - A workflow-based platform for improved Universal Primer design
 
-April 2008
+September 2012
 
 
 # UniPrime
@@ -9,12 +9,12 @@ April 2008
 
 UniPrime is an open-source software which automatically designs large sets of universal primers by simply inputting a GeneID reference. UniPrime automatically retrieves and aligns orthologous sequences from [GenBank](http://www.ncbi.nlm.nih.gov/Genbank/), identifies regions of conservation within the alignment and generates suitable primers that can amplify variable genomic regions. UniPrime differs from previous automatic primer design programs in that all steps of primer design are automated, saved and are phylogenetically limited. We have experimentally verified the efficiency and success of this program. UniPrime is an experimentally validated, fully automated program that generates successful cross-species primers that take into account the biological aspects of the PCR.
 
-The current version is UniPrime [1.18] (Prune / April 2nd, 2008).
+The current version is UniPrime [2.10] (Ootoowerg / September 7th, 2012).
 
 
 ## Documentation
 
-Text files associated with the UniPrime: [README](README.md) [INSTALL](INSTALL.md) [LICENSE](http://creativecommons.org/licenses/LGPL/2.1/).
+Text files associated with the UniPrime: [README](README.md) [TUTORIAL](TUTORIAL.md)  [INSTALL](INSTALL.md) [LICENSE](http://creativecommons.org/licenses/LGPL/2.1/).
 
 
 ## Download
