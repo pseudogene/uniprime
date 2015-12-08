@@ -3,7 +3,7 @@
 # Quick Installation (Ubuntu/Fedora)
 
 ## Disclamer
-UniPrime 1.16 has been updated to support all recent development of the external resources it requires. Here is a quick installation tutorial provided without any warranty. It is base on a standard installation of either [Ubuntu](http://www.ubuntu.com/) 12+ or [Fedora](https://fedoraproject.org/) 17+.
+UniPrime 1.18 has been updated to support all recent development of the external resources it requires. Here is a quick installation tutorial provided without any warranty. It is base on a standard installation of either [Ubuntu](http://www.ubuntu.com/) 12+ or [Fedora](https://fedoraproject.org/) 17+.
 
 ## Primer3
 You will need [Primer3](http://primer3.sourceforge.net/)
@@ -41,9 +41,9 @@ or run the installation executable for ubuntu
 Download, then unpack the tar file. For example:
 
 ```
-     bunzip2 uniprime-1.16.tar.bz2
-     tar xvf uniprime-1.16.tar
-     cd uniprime-1.16
+     bunzip2 uniprime-1.18.tar.bz2
+     tar xvf uniprime-1.18.tar
+     cd uniprime-1.18
 ```
 
 Initialising the Database:

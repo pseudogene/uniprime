@@ -49,7 +49,7 @@ head('about');
           </p>
           <h3><?php print _("License"); ?></h3>
           <p>
-            <img src="<?php print $config['server']; ?>/images/lgpl.png" alt="GNU LGPL" width="80" height="15" />&nbsp;<?php print _("This work is licensed under the GNU LGPL License 2.1"); ?>
+            <img src="<?php print $config['server']; ?>/images/lgpl.png" alt="GNI LGPL" width="80" height="15" />&nbsp;<?php print _("This work is licensed under the GNU LGPL License 2.1"); ?>
           </p>
         </div>
         <div id="side">

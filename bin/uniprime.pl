@@ -21,7 +21,7 @@ use Bio::Seq;
 use Bio::Tools::UniTools;
 
 #----------------------------------------
-my $version = '1.16 (prune)';
+my $version = '1.18 (prune)';
 my $db_name = 'uniprime';
 my $db_user = $ENV{'USER'};
 my $db_host = 'localhost';

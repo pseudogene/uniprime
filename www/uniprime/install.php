@@ -3,7 +3,7 @@
 /* UniPrime installer (v0.2) */
 
 /* Distribution package */
-define('_VERSION', 'UniPrime/Prune v1.16 (2008-01-22)');
+define('_VERSION', 'UniPrime/Prune v1.18 (2008-04-02)');
 
 function lookdir($dir) {
   if (is_dir($dir) && ($dh = opendir($dir))) {

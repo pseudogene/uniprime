@@ -1,4 +1,4 @@
-## $Id: UniTools.pm,v 1.16 2008/01/10 14:50:37 Europe/Dublin $
+## $Id: UniTools.pm,v 1.18 2008/04/02 14:50:37 Europe/Dublin $
 #
 # Universal Primer Design Tools (UniPrime package)
 # Copyright 2006-2008 Bekaert M <michael@batlab.eu>
@@ -95,7 +95,7 @@ use Bio::Tools::BlastTools;
 use Bio::Tools::Run::Alignment::TCoffee;
 use Bio::Tools::Run::Primer3;
 
-$VERSION = '1.16 (prune)';
+$VERSION = '1.18 (prune)';
 
 @ISA = qw(Bio::Root::Root Bio::Root::IO);
 

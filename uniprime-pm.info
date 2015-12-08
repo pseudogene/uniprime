@@ -1,0 +1,59 @@
+Info2: <<
+Package: uniprime-pm%type_pkg[perl]
+Version: 1.18
+Revision: 1
+Maintainer: Michael Bekaert <michael@batlab.eu>
+Homepage: http://uniprime.batlab.eu
+License: GPL
+Description: Bioperl module for Universal Primer Design
+Architecture: (%type_pkg[perl] = 581) powerpc, (%type_pkg[perl] = 584) powerpc
+Distribution: (%type_pkg[perl] = 581) 10.3, (%type_pkg[perl] = 581) 10.4, (%type_pkg[perl] = 584) 10.3, (%type_pkg[perl] = 584) 10.4
+BuildDepends: perl%type_pkg[perl]-core, fink (>= 0.20.1-1), module-build-pm%type_pkg[perl] (>= 0.2808)
+Depends: <<
+ postgresql,
+ bioperl-pm%type_pkg[perl],
+ bioperl-run-pm%type_pkg[perl], 
+ tcoffee
+<<
+Source: https://github.com/mbekaert/uniprime/releases/download/%v/uniprime-%v.tar.bz2
+Source-MD5: ed18365b889f23ecd09aebd8cb3430d7
+Type: perl (5.8.1 5.8.6 5.8.8)
+UpdatePOD: True
+CompileScript: <<
+  perl Makefile.PL
+  make
+<<
+Recommends:<<
+ php5-apache2-ssl-pgsql
+<<
+InstallScript: <<
+  make install
+  sudo -u postgres %i/bin/createuser -S -d -R www
+  sudo -u postgres %i/bin/createuser -S -d -R root
+  %i/bin/createdb uniprime
+  %i/bin/psql uniprime < uniprime.sql
+  ./grant.sh www | %i/bin/psql uniprime
+  install -d 644 www/uniprime /Library/WebServer/Documents/
+  mkdir -p %i/share/%n
+  install -m 644 README %i/share/%n
+  install -m 644 LICENSE %i/share/%n
+  install -m 755 bin/* %i/share/%n
+  cp %i/bin/t_coffee /usr/bin
+<<
+DocFiles: INSTALL README LICENSE
+DescDetail: <<
+UniPrime is perl/bioperl module which automatically designs large
+sets of universal primers by simply inputting a GeneID reference. UniPrime
+automatically retrieves and aligns orthologous sequences from GenBank,
+identifies regions of conservation within the alignment and generates
+suitable primers that can amplify variable genomic regions. UniPrime differs
+from previous automatic primer design programs in that all steps of primer
+design are automated, saved and are phylogenetically limited. We have
+experimentally verified the efficiency and success of this program.
+<<
+DescUsage: <<
+An online tutorial is available at http://uniprime.batlab.eu/.
+All scripts can be found in %i/share/%n.
+<< 
+
+<<

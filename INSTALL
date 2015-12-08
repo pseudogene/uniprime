@@ -1,4 +1,4 @@
-# $Id: INSTALL,v 1.16 2008/01/23 10:17:37 Europe/Dublin $
+# $Id: INSTALL,v 1.18 2008/04/02 10:17:37 Europe/Dublin $
 
 o INSTALLATION
 o SYSTEM REQUIREMENTS
@@ -8,8 +8,7 @@ o INSTALLING UNIPRIME
 o INSTALLATION
 
  Universal Primer Design Tools (UniPrime) has been installed
- on many forms of Unix, on Win9X/NT/2000/XP and on MacOS X
- (see README.MACOSX).
+ on many forms of Linux/Unix.
 
 
 o SYSTEM REQUIREMENTS
@@ -40,9 +39,9 @@ o INSTALLING UNIPRIME
 
    Download, then unpack the tar file. For example:
 
-     bunzip2 uniprime-1.16.tar.bz2
-     tar xvf uniprime-1.16.tar
-     cd uniprime-1.16
+     bunzip2 uniprime-1.18.tar.bz2
+     tar xvf uniprime-1.18.tar
+     cd uniprime-1.18
 
    Now issue the make commands to install the Bioperl modules:
 
