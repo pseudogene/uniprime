@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 # Universal Primer Design Tools (UniPrime package)
-# Copyright 2006-2007 Bekaert M <michael@batlab.eu>
+# Copyright 2006-2008 Bekaert M <michael@batlab.eu>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@ use Bio::Seq;
 use Bio::Tools::UniTools;
 
 #----------------------------------------
-my $version = '1.14 (prune)';
+my $version = '1.16 (prune)';
 my $db_name = 'uniprime';
 my $db_user = $ENV{'USER'};
 my $db_host = 'localhost';
@@ -33,20 +33,20 @@ my ( $dbh, $target, $action, $locus, $pmid, $db, @selected );
 my ( $verbose, $dna, $evalue, $consensus, $size, $query, $status, $type, $out ) = ( 0, 0, 1e-100, 60, 600, '', 1, 6, 1 );
 
 GetOptions(
-    'v!'       => \$verbose,
-    'action=s' => \$action,
-    'target=s' => \$target,
-    'db:s'     => \$db,
-    'dna!'     => \$dna,
-    'e:f'      => \$evalue,
-    'c:i'      => \$consensus,
-    'query:s'  => \$query,
+    'v!'        => \$verbose,
+    'action=s'  => \$action,
+    'target=s'  => \$target,
+    'db:s'      => \$db,
+    'dna!'      => \$dna,
+    'e:f'       => \$evalue,
+    'c:i'       => \$consensus,
+    'query:s'   => \$query,
     'select:s@' => \@selected,
-    'size:i'   => \$size,
-    'locus=i'  => \$locus,
-    'pmid:i'   => \$pmid,
-    'status:i' => \$status,
-    'type:i'   => \$type
+    'size:i'    => \$size,
+    'locus=i'   => \$locus,
+    'pmid:i'    => \$pmid,
+    'status:i'  => \$status,
+    'type:i'    => \$type
 );
 
 if ( ( defined $target ) && ( length($target) > 2 ) && ( defined $action ) && ( ( $action =~ /^[opav]/ ) && ( $target =~ /[LX](\d+)\.(\d+)/ ) || ( $action =~ /^[l]/ ) && ( $target =~ /(\d+)/ ) ) ) {

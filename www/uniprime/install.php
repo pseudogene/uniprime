@@ -1,9 +1,9 @@
 <?php
 /* install.php */
-/* UniPrime installer (v0.1) */
+/* UniPrime installer (v0.2) */
 
 /* Distribution package */
-define('_VERSION', 'UniPrime/Prune v1.14 (2007-12-30)');
+define('_VERSION', 'UniPrime/Prune v1.16 (2008-01-22)');
 
 function lookdir($dir) {
   if (is_dir($dir) && ($dh = opendir($dir))) {

@@ -1,6 +1,6 @@
--- uniprime.v1.14.prune
+-- uniprime.v1.16.prune
 --
--- Copyright 2006-2007 M.Bekaert
+-- Copyright 2006-2008 M.Bekaert
 --
 -- PostgreSQL database: uniprime
 -- --------------------------------------------------------
@@ -17,6 +17,7 @@ CREATE TABLE alignment (
     sequences text NOT NULL,
     alignment text NOT NULL,
     consensus text NOT NULL,
+    score integer,    
     structure text,
     program character varying(64) NOT NULL,
     comments text,

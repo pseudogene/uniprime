@@ -123,7 +123,7 @@ if (isset($_GET['edit']) && preg_match('/^A(\d+)\.(\d+)/', $_GET['edit'], $match
 }elseif (isset($_GET['alignment']) && preg_match('/^A(\d+)\.(\d+)/', $_GET['alignment'], $matches)) {
   head($matches[0]);
   $sql = sql_connect($config['db']);
-  $result = sql_query('SELECT a.prefix, a.id, a.locus_prefix, a.locus_id, b.name, b.functions, a.sequences, a.program, a.comments, a.updated FROM alignment AS a, locus AS b WHERE a.prefix=' . octdec($matches[1]) . ' AND a.id=' . octdec($matches[2]) . ' AND b.prefix=a.locus_prefix AND b.id=a.locus_id;', $sql);
+  $result = sql_query('SELECT a.prefix, a.id, a.locus_prefix, a.locus_id, b.name, b.functions, a.sequences, a.program, a.comments, a.updated, a.score FROM alignment AS a, locus AS b WHERE a.prefix=' . octdec($matches[1]) . ' AND a.id=' . octdec($matches[2]) . ' AND b.prefix=a.locus_prefix AND b.id=a.locus_id;', $sql);
   if ((!strlen($r = sql_last_error($sql))) && (sql_num_rows($result) == 1)) {
     $row = sql_fetch_row($result);
 ?>
@@ -144,6 +144,7 @@ if (isset($_GET['edit']) && preg_match('/^A(\d+)\.(\d+)/', $_GET['edit'], $match
         print '            <span class="title">' . _("Program") . '</span> <span class="desc">' . $row[7] . "</span><br />\n";
       }
       print '            <span class="title">' . _("Release") . '</span> <span class="desc">' . date(_("m/d/Y"), strtotime($row[9])) . "</span><br />\n";
+      if (!empty($row[10])) print '            <span class="title">' . _("Score") . '</span> <span class="desc">' . $row[10] . "</span><br />\n";
       print '            <span class="title">' . _("Alignment") . '</span> <span class="desc"><a href="#" onclick="window.open(\'' . $config['server'] . '/alignment/dna/' . $matches[0] . '\', \'' . _("Alignment") . '\', \'toolbar=no, location=no, directories=no, status=no, scrollbars=yes, resizable=yes, copyhistory=no, width=450, height=400, left=300, top=50\');return false;" title="' . _("Extract Alignment") . '">' . _("See Alignment") . "</a></span><br />\n";
       print '            <span class="title">' . _("Consensus") . '</span> <span class="desc"><a href="#" onclick="window.open(\'' . $config['server'] . '/consensus/dna/' . $matches[0] . '\', \'' . _("Consensus") . '\', \'toolbar=no, location=no, directories=no, status=no, scrollbars=yes, resizable=yes, copyhistory=no, width=450, height=400, left=300, top=50\');return false;" title="' . _("Extract Consensus sequence") . '">' . _("See Consensus sequence") . "</a></span><br />\n";
       if (!empty($row[8])) {

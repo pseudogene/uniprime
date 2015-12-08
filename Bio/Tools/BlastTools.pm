@@ -3,7 +3,7 @@
 # BioPerl module for Bio::Tools::BlastTools
 #
 # 'Blast made easy' shared package
-# Copyright 2005-2007 Bekaert M <michael@batlab.eu>
+# Copyright 2005-2007 Bekaert M <mbekaert@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -87,7 +87,7 @@ to author.
 
 =head1 AUTHOR
 
-B<Michael Bekaert> (michael@batlab.eu)
+B<Michael Bekaert> (mbekaert@gmail.com)
 
 Address:
      School of Biology & Environmental Science

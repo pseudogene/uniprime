@@ -1,6 +1,6 @@
-Irishgrid v0.3 - A workflow-based platform for improved Universal Primer design
+UniPrime v1.16 - A workflow-based platform for improved Universal Primer design
 
-November 2007
+January 2008
 
 
 # UniPrime
@@ -9,7 +9,7 @@ November 2007
 
 UniPrime is an open-source software which automatically designs large sets of universal primers by simply inputting a GeneID reference. UniPrime automatically retrieves and aligns orthologous sequences from [GenBank](http://www.ncbi.nlm.nih.gov/Genbank/), identifies regions of conservation within the alignment and generates suitable primers that can amplify variable genomic regions. UniPrime differs from previous automatic primer design programs in that all steps of primer design are automated, saved and are phylogenetically limited. We have experimentally verified the efficiency and success of this program. UniPrime is an experimentally validated, fully automated program that generates successful cross-species primers that take into account the biological aspects of the PCR.
 
-The current version is UniPrime [1.14] (Prune / November 30th, 2007).
+The current version is UniPrime [1.16] (Prune / January 23rd, 2008).
 
 
 ## Documentation

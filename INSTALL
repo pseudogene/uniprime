@@ -1,4 +1,4 @@
-# $Id: INSTALL,v 1.14 2007/11/30 08:57:39 Europe/Dublin $
+# $Id: INSTALL,v 1.16 2008/01/23 10:17:37 Europe/Dublin $
 
 o INSTALLATION
 o SYSTEM REQUIREMENTS
@@ -8,12 +8,13 @@ o INSTALLING UNIPRIME
 o INSTALLATION
 
  Universal Primer Design Tools (UniPrime) has been installed
- on many forms of Unix, MacOS X and on Win9X/NT/2000/XP.
+ on many forms of Unix, on Win9X/NT/2000/XP and on MacOS X
+ (see README.MACOSX).
 
 
 o SYSTEM REQUIREMENTS
 
- - perl 5.005 or later.
+ - Perl 5.005 or later.
 
  - Bioperl modules: UniPrime uses functionality provided
   in Bioperl modules. (see http://www.bioperl.org/)
@@ -39,38 +40,38 @@ o INSTALLING UNIPRIME
 
    Download, then unpack the tar file. For example:
 
-     >bunzip2 uniprime-1.14.tar.bz2
-     >tar xvf uniprime-1.14.tar
-     >cd uniprime-1.14
+     bunzip2 uniprime-1.16.tar.bz2
+     tar xvf uniprime-1.16.tar
+     cd uniprime-1.16
 
    Now issue the make commands to install the Bioperl modules:
 
-     >perl Makefile.PL
-     >make            
-     >make install    
+     perl Makefile.PL
+     make            
+     sudo make install    
  
    To 'make install' you need write permission in the perl5/site_perl/ 
    source area.
 
    Initialising the Database:
 
-     >createdb uniprime
-     >psql uniprime < uniprime.sql
+     createdb uniprime
+     psql uniprime < uniprime.sql
 
    This process assumes that you are using a functional postgreSQL
    server/client and the current user is registered as an SQL user.
    (see postgreSQL installation manual). 
 
 
-o INSTALLING THE WEB-COMPAGNON
+o INSTALLING THE WEB-COMPANION
  
    Copy the web pages in your web server root (usually /var/www/html)
    and grant the access to the database to the web server user
    (usually www or www-admin):
 
-     >cp -r www/uniprime /your_web_server_path
-     >chown -R web-server-user:web-server-group /your_web_server_path/uniprime
-     >./grant.sh web-server-user | psql uniprime
+     cp -r www/uniprime /your_web_server_path
+     chown -R web-server-user:web-server-group /your_web_server_path/uniprime
+     ./grant.sh web-server-user | psql uniprime
    
    then use your web browser to finalise the installation:
 

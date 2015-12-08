@@ -1,7 +1,7 @@
-## $Id: UniTools.pm,v 1.14 2007/11/30 08:57:39 Europe/Dublin $
+## $Id: UniTools.pm,v 1.16 2008/01/10 14:50:37 Europe/Dublin $
 #
 # Universal Primer Design Tools (UniPrime package)
-# Copyright 2006-2007 Bekaert M <michael@batlab.eu>
+# Copyright 2006-2008 Bekaert M <michael@batlab.eu>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,7 @@ perl(1), primer3_core(1), t_coffee(1), and bioperl web site
 
 =head1 LICENCE
 
-Copyright 2006-2007 - Michael Bekaert
+Copyright 2006-2008 - Michael Bekaert
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -78,6 +78,7 @@ package Bio::Tools::UniTools;
 use vars qw(@ISA $VERSION);
 use strict;
 use POSIX qw(ceil floor);
+use File::Temp qw/tempfile/;
 use DBI;
 use MIME::Base64;
 use File::Basename;
@@ -94,7 +95,7 @@ use Bio::Tools::BlastTools;
 use Bio::Tools::Run::Alignment::TCoffee;
 use Bio::Tools::Run::Primer3;
 
-$VERSION = '1.14 (prune)';
+$VERSION = '1.16 (prune)';
 
 @ISA = qw(Bio::Root::Root Bio::Root::IO);
 
@@ -158,11 +159,11 @@ sub _compress {
     my $query = shift(@args);
     my $PATH_BZIP = ( ( defined $ENV{'BZIPDIR'} ) ? $ENV{'BZIPDIR'} : $self->_findexec('bzip2') );
 
-    open BZ2, '>' . $PATH_TMP . '/uniprime';
-    print BZ2 $query;
-    close BZ2;
-    $query = encode_base64(`$PATH_BZIP -9 -c $PATH_TMP/uniprime`);
-    unlink( $PATH_TMP . '/uniprime' );
+    my ( $BZ2, $filename ) = tempfile( DIR => $PATH_TMP, UNLINK => 1 );
+    print $BZ2 $query;
+    close $BZ2;
+    $query = encode_base64(`$PATH_BZIP -9 -c $filename`);
+    unlink($filename);
     return $query;
 }
 
@@ -181,11 +182,11 @@ sub _uncompress {
     my $query = shift(@args);
     my $PATH_BZIP = ( ( defined $ENV{'BZIPDIR'} ) ? $ENV{'BZIPDIR'} : $self->_findexec('bzip2') );
 
-    open BZ2, '>' . $PATH_TMP . '/uniprime.bz2';
-    print BZ2 decode_base64($query);
-    close BZ2;
-    $query = `$PATH_BZIP -d -c $PATH_TMP/uniprime.bz2`;
-    unlink( $PATH_TMP . '/uniprime.bz2' );
+    my ( $BZ2, $filename ) = tempfile( DIR => $PATH_TMP, UNLINK => 1 );
+    print $BZ2 decode_base64($query);
+    close $BZ2;
+    $query = `$PATH_BZIP -d -c $filename`;
+    unlink($filename);
     return $query;
 }
 
@@ -751,15 +752,17 @@ sub addLocus {
                             $sth->execute( $prefix, $locusid[0], $locusid[1], $seqid[0], $seqid[1], $self->_compress( uc ${ $sequence{'rna_seq'} }[$i] ), $rna, ++$i, 'UniPrime v' . $VERSION, $prefix ) or die($DBI::errstr);
                         }
                     }
-                    printf( STDERR "* %s (%d) added to the database, reference L%lo.%lo. :)\n", $gene{'locus'}, $geneid, $locusid[0], $locusid[1] ) if ($verbose);
+                    printf( STDERR "* %s (%d) added to the database, reference L%lo.%lo. :)\n", $gene{'locus'}, $geneid, $locusid[0], $locusid[1] );
                     return 1;
                 }
             } else {
                 my @locusid = $sth->fetchrow_array;
-                printf( STDERR "* %s (%d) is already in the database, reference L%lo.%lo! :(\n", $gene{'locus'}, $geneid, $locusid[0], $locusid[1] ) if ($verbose);
+                printf( STDERR "* %s (%d) is already in the database, reference L%lo.%lo! :(\n", $gene{'locus'}, $geneid, $locusid[0], $locusid[1] );
+                return 1;
             }
         }
     }
+    printf( STDERR "* GeneID %d unknown! :(\n", $geneid );
 }
 
 =head2 populate_orthologues
@@ -834,7 +837,7 @@ sub populate_alignment {
     $verbose = 0  unless ( defined $verbose );
     $dna     = 0  unless ( defined $dna );       # 0|1 rna only (true|false)
     $consen  = 60 unless ( defined $consen );
-    my ( $structure, $specie );
+    my ( $structure, $specie, $score );
     my @id;
 
     print STDERR "\nEstablish alignment\n" if ($verbose);
@@ -846,8 +849,8 @@ sub populate_alignment {
         my $locus = sprintf( "%lo.%lo", $prefix, $id );
         open SEQ, '>' . $PATH_TMP . '/align.' . $locus . '.fasta';
         while ( my @row = $sth->fetchrow_array ) {
-            my $select=sprintf( "%lo\.%lo", $row[5], $row[6] );
-            if ((@selected == 0) || (grep /^S$select$/i, @selected)) {
+            my $select = sprintf( "%lo\.%lo", $row[5], $row[6] );
+            if ( ( @selected == 0 ) || ( grep /^S$select$/i, @selected ) ) {
                 if ( $row[4] == 1 ) {
                     $structure = $row[3];
                     $specie = $1 if ( $row[1] =~ m/^(\w+)/o );
@@ -855,7 +858,7 @@ sub populate_alignment {
                 push( @id, sprintf( "%lo.%lo", $row[5], $row[6] ) );
                 print STDERR ' > ', $row[1], ' (', $row[0], ")\n" if ($verbose);
                 print SEQ '>', $row[1], "\n", $self->_uncompress( $row[2] ), "\n";
-            }            
+            }
         }
         close SEQ;
         $sth->finish;
@@ -866,12 +869,15 @@ sub populate_alignment {
             my @loc;
             my $program = ( ( -f $PATH_TMP . '/align.' . $locus . '.aln' ) ? 'Imported' : 'T-Coffee ' . $factory->version() );
             print STDERR "\nLocal $program\n" if ($verbose);
-            my $sth = $dbh->prepare('INSERT INTO alignment (prefix, id, locus_prefix, locus_id, sequences, alignment, structure, consensus, program, author) SELECT ?, CASE WHEN max(id)>=1 THEN max(id)+1 ELSE 1 END, ?, ?, ?, ?, ?, ?, ?, ? FROM alignment WHERE prefix=?;');
+            my $sth = $dbh->prepare('INSERT INTO alignment (prefix, id, locus_prefix, locus_id, sequences, alignment, structure, consensus, program, score, author) SELECT ?, CASE WHEN max(id)>=1 THEN max(id)+1 ELSE 1 END, ?, ?, ?, ?, ?, ?, ?, ?, ? FROM alignment WHERE prefix=?;');
             if ( -f $PATH_TMP . '/align.' . $locus . '.aln' ) {
                 $aln = ( Bio::AlignIO->new( -file => "<$PATH_TMP/align.$locus.aln", -format => 'fasta' ) )->next_aln;
             } else {
                 my $out = Bio::AlignIO->new( -file => ">$PATH_TMP/align.$locus.aln", -format => 'fasta', -flush => 0 );
                 $out->write_aln($aln);
+                open SEQTMP, '<' . $factory->outfile();
+                $score = $1 if ( <SEQTMP> =~ m/SCORE=(\d+)/go );
+                close SEQTMP;
             }
             my $consensus = uc( $aln->consensus_string($consen) );
             $consensus =~ tr/\?/N/;
@@ -899,12 +905,12 @@ sub populate_alignment {
                 }
             }
             my $myprefix = floor( ( ( ( localtime(time) )[5] - 107 ) * 12 + ( localtime(time) )[4] ) / 1.5 );
-            $sth->execute( $myprefix, $prefix, $id, join( ' ', @id ), encode_base64(`$PATH_BZIP -9 -c $PATH_TMP/align.$locus.aln`), ( @loc ? 'join(' . join( ',', @loc ) . ')' : ( ($structure) ? $structure : '1..' . length($realsensus) ) ), $self->_compress($realsensus), $program, 'UniPrime v' . $VERSION, $myprefix ) or die($DBI::errstr);
+            $sth->execute( $myprefix, $prefix, $id, join( ' ', @id ), encode_base64(`$PATH_BZIP -9 -c $PATH_TMP/align.$locus.aln`), ( @loc ? 'join(' . join( ',', @loc ) . ')' : ( ($structure) ? $structure : '1..' . length($realsensus) ) ), $self->_compress($realsensus), $program, ( ( defined $score ) ? $score : undef ), 'UniPrime v' . $VERSION, $myprefix ) or die($DBI::errstr);
             $sth = $dbh->prepare('UPDATE locus SET status=3 WHERE prefix=? AND id=? AND status=2;');
             $sth->execute( $prefix, $id ) or die($DBI::errstr);
-            unlink( $PATH_TMP . '/align.' . $prefix . '.' . $id . '.aln' );
+            unlink( $PATH_TMP . '/align.' . $locus . '.aln' );
         }
-        unlink( $PATH_TMP . '/align.' . $prefix . '.' . $id . '.fasta' );
+        unlink( $PATH_TMP . '/align.' . $locus . '.fasta' );
     }
     print STDERR "\nDone.\n" if ($verbose);
 }

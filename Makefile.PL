@@ -1,4 +1,4 @@
-# $Id: Makefile.pm,v 1.14 2007/11/30 08:57:39 Europe/Dublin $
+# $Id: Makefile.pm,v 1.16 2008/01/23 10:17:37 Europe/Dublin $
 
 require 5.005;
 use ExtUtils::MakeMaker ;
@@ -8,7 +8,7 @@ use Config;
 
 $NAME     = 'Bio';
 $DISTNAME = 'uniprime';
-$VERSION  = '1.14';
+$VERSION  = '1.16';
 
 WriteMakefile(
    VERSION => $VERSION,

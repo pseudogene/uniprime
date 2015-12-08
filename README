@@ -1,4 +1,4 @@
-# $Id: README,v 1.14 2007/11/30 08:57:39 Europe/Dublin $
+# $Id: README,v 1.16 2008/01/23 10:17:37 Europe/Dublin $
 
                           UniPrime (Prune) README
 
@@ -18,19 +18,20 @@ o INSTALLATION
 o TUTORIAL
 
  Here is a simple example of a full execution of UniPrime. Each step can be
- review with the web-companion interface.
+ reviewed with the web-companion interface.
 
-   1. added a new locus and use the human OAZ1 gene as prototype. The GeneID
-   (4946) is retrieved from GenBank:
+   1. Add a new locus and use the human OAZ1 gene as prototype. The GeneID
+   (4946) is retrieved from GenBank (from the command line in a Terminal
+   window):
 
-     >./uniprime.pl --action=locus --target=4946 -v
+     ./uniprime.pl --action=locus --target=4946 -v
 
      * OAZ1 (4946) added to the database, reference L3.1 :)
 
    2. Use the locusID L3.1 (case sensitive) and look for orthologues within
-   the class Mammalia:
+   the class Mammalia and an e-value of 2e-50 as threshold:
 
-     >./uniprime.pl --action=ortho --target=L3.1 --query=Mammalia[ORGN] -v
+     ./uniprime.pl --action=ortho --target=L3.1 -e=2e-50 --query=Mammalia[ORGN] -v
 
      Seach for orthologues
      Remote blast of OAZ1
@@ -46,7 +47,7 @@ o TUTORIAL
    3. Use the locusID L3.1 and establish an alignment and a consensus
    sequence with a threshold of 60%:
 
-     >./uniprime.pl --action=align --target=L3.1 -c=60 -v
+     ./uniprime.pl --action=align --target=L3.1 -c=60 -v
 
      Establish alignment
       > Homo sapiens (OAZ1)
@@ -59,9 +60,9 @@ o TUTORIAL
       > Canis lupus familiaris (LOC476749)
      Done.
 
-   4. Use the locusID L3.1 and design the primer set:
+   4. Use the locusID L3.1 and design the primer sets:
 
-     >./uniprime.pl --action=primer --target=L3.1 -v
+     ./uniprime.pl --action=primer --target=L3.1 -v
 
      Local Primer3
       > OAZ1 (alignment A3.1) in progress
@@ -78,7 +79,7 @@ o TUTORIAL
    5. Optionally, use the primer set X3.2 and do a virtual PCR with the
    Mammalian sequence of the WGS databank of the NCBI.
 
-     >./uniprime.pl --action=vpcr --target=X3.2 --db=wgs --query=Mammalia[ORGN] -v
+     ./uniprime.pl --action=vpcr --target=X3.2 --db=wgs --query=Mammalia[ORGN] -v
 
      Execute a virtual-PCR for primer set X3.2
      > Remote blast for Homo sapiens
@@ -97,7 +98,7 @@ o COMMAND REFERENCE
  There is only one file controlling UniPrime in bin/uniprime.pl.
  You may find more help by using the command-line help of this file.
 
-     >./uniprime.pl --help
+     ./uniprime.pl --help
 
  There are five main functions: adding a new locus/gene; searching
  for the orthologous sequences in other species; establishing the
@@ -149,6 +150,8 @@ o COMMAND REFERENCE
 
 o FAQ
 
- Q: Why is this version of UniPrime is called 'Prune' ?
+ Q: Why is this version of UniPrime is called 'Prune'?
  A: "Prune juice. A warrior's drink!" - Worf
 
+ Q: Where can I found more help?
+ A: UniPrime home page is now http://uniprime.batlab.eu

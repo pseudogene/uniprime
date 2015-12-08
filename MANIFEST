@@ -3,6 +3,7 @@ MANIFEST			This list of files
 Makefile.PL
 INSTALL
 README
+README.MACOSX
 uniprime.sql
 grant.sh
 Bio/Tools/UniTools.pm

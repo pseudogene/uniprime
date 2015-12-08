@@ -53,7 +53,7 @@ function foot() {
       </div>
     </div>
     <p id="footer">
-    &copy; 2007 M. Bekaert &amp; E. Teeling. <?php print _("This work is licensed under the"); ?> <a rel="license" href="http://creativecommons.org/licenses/LGPL/2.1/"><?php print _("GNU LGPL License 2.1"); ?></a>.
+    &copy; 2006-2008 M. Bekaert &amp; E. Teeling. <?php print _("This work is licensed under the"); ?> <a rel="license" href="http://creativecommons.org/licenses/LGPL/2.1/"><?php print _("GNU LGPL License 2.1"); ?></a>.
     </p>
   </body>
 </html>

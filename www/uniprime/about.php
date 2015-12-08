@@ -49,7 +49,7 @@ head('about');
           </p>
           <h3><?php print _("License"); ?></h3>
           <p>
-            <img src="<?php print $config['server']; ?>/images/lgpl.png" alt="Creative common" width="80" height="15" />&nbsp;<?php print _("This work is licensed under a GNU LGPL License 2.1"); ?>
+            <img src="<?php print $config['server']; ?>/images/lgpl.png" alt="GNU LGPL" width="80" height="15" />&nbsp;<?php print _("This work is licensed under the GNU LGPL License 2.1"); ?>
           </p>
         </div>
         <div id="side">
@@ -63,7 +63,7 @@ head('about');
 /*<![CDATA[*/
  zulu('emma.teeling','Emma Teeling','ucd.ie', 'go');
 /*]]>*/</script>
-          <a href="http://uniprime.sourceforge.net" class="go url">UniPrime</a>
+          <a href="http://uniprime.batlab.eu" class="go url">UniPrime</a>
           <h2 class="separated"><?php print _("Main menu"); ?></h2>
           <a href="<?php print $config['server']; ?>/browse" title="<?php print _("Browse in the database"); ?>" class="go"><?php print _("Browse"); ?></a>
           <a href="<?php print $config['server']; ?>/search" title="<?php print _("Direct web search"); ?>" class="go"><?php print _("Search"); ?></a>
